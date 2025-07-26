@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Happy Birthday Papa!</title>
+  <style>
+    body {
+      margin: 0;
+      background: linear-gradient(135deg, #ffe6e6, #ffcccc);
+      font-family: 'Comic Sans MS', cursive, sans-serif;
+      overflow-x: hidden;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      height: 100vh;
+      position: relative;
+      text-align: center;
+      color: #ff0066;
+    }
+
+    /* Banner container */
+    .banner {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      padding: 10px 0;
+      background: transparent;
+      z-index: 5;
+      pointer-events: none;
+    }
+    .banner div {
+      width: 40px;
+      height: 40px;
+      background: linear-gradient(45deg, #ff4d6d, #ffb6b9);
+      clip-path: polygon(0 0, 100% 0, 80% 100%, 20% 100%);
+      animation: swing 3s ease-in-out infinite;
+      transform-origin: top center;
+    }
+    .banner div:nth-child(odd) {
+      background: linear-gradient(45deg, #7ee8fa, #80ff72);
+    }
+    .banner div:nth-child(even) {
+      animation-delay: 1.5s;
+    }
+    @keyframes swing {
+      0%, 100% { transform: rotate(0deg); }
+      50% { transform: rotate(10deg); }
+    }
+
+    /* Photo styling */
+    .papa-photo {
+      width: 300px;
+      border-radius: 20px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+      margin-top: 70px; /* leave space for banners */
+      z-index: 2;
+    }
+
+    /* Birthday message */
+    h1 {
+      font-size: 4rem;
+      margin: 20px 0 10px 0;
+      text-shadow: 2px 2px #fff;
+      z-index: 2;
+    }
+
+    /* Cake styling */
+    .cake {
+      width: 180px;
+      margin: 0 0 30px 0;
+      z-index: 2;
+    }
+
+    /* Confetti canvas */
+    canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      pointer-events: none;
+      z-index: 1;
+      width: 100%;
+      height: 100%;
+    }
+
+    /* Balloons container */
+    .balloons {
+      position: fixed;
+      bottom: -150px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100%;
+      height: 100vh;
+      pointer-events: none;
+      z-index: 3;
+      overflow: visible;
+    }
+
+    /* Balloon styles */
+    .balloon {
+      position: absolute;
+      bottom: 0;
+      width: 50px;
+      height: 70px;
+      border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+      background: red;
+      opacity: 0.9;
+      animation: floatUp linear infinite;
+      filter: drop-shadow(0 2px 2px rgba(0,0,0,0.15));
+    }
+    .balloon::after {
+      content: '';
+      position: absolute;
+      bottom: -15px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 2px;
+      height: 20px;
+      background: #555;
+      border-radius: 1px;
+    }
+    .balloon:nth-child(1) {
+      background: #ff4d6d;
+      left: 10%;
+      animation-duration: 8s;
+      animation-delay: 0s;
+    }
+    .balloon:nth-child(2) {
+      background: #80ff72;
+      left: 25%;
+      animation-duration: 10s;
+      animation-delay: 2s;
+    }
+    .balloon:nth-child(3) {
+      background: #7ee8fa;
+      left: 40%;
+      animation-duration: 9s;
+      animation-delay: 1s;
+    }
+    .balloon:nth-child(4) {
+      background: #ffb6b9;
+      left: 60%;
+      animation-duration: 11s;
+      animation-delay: 3s;
+    }
+    .balloon:nth-child(5) {
+      background: #ffcc5c;
+      left: 75%;
+      animation-duration: 7s;
+      animation-delay: 4s;
+    }
+
+    @keyframes floatUp {
+      0% {
+        transform: translateY(0) scale(1);
+        opacity: 0.9;
+      }
+      100% {
+        transform: translateY(-110vh) scale(1.1);
+        opacity: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Banners -->
+  <div class="banner">
+    <div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div>
+  </div>
+
+  <!-- Papa's photo -->
+  <img src="papa.jpg" alt="Papa's Photo" class="papa-photo" />
+
+  <!-- Birthday message -->
+  <h1>🎉 HAPPY BIRTHDAY PAPA 🎉</h1>
+
+  <!-- Cake image (your local file) -->
+  <img src="birthday cake.jpg" alt="Birthday Cake" class="cake" />
+
+  <!-- Balloons -->
+  <div class="balloons">
+    <div class="balloon"></div>
+    <div class="balloon"></div>
+    <div class="balloon"></div>
+    <div class="balloon"></div>
+    <div class="balloon"></div>
+  </div>
+
+  <!-- Confetti canvas -->
+  <canvas id="confetti-canvas"></canvas>
+
+  <!-- Background music -->
+  <audio autoplay loop>
+    <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mp3" />
+    Your browser does not support the audio element.
+  </audio>
+
+  <!-- Confetti script -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+  <script>
+    // Confetti explosion every second
+    setInterval(() => {
+      confetti({
+        particleCount: 100,
+        spread: 70,
+        origin: { y: 0.6 }
+      });
+    }, 1000);
+  </script>
+
+</body>
+</html>
